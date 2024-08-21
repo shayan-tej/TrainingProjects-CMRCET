@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct Holder {
+    int id;
+    int amount;
+};
+
+bool compareByAmount(const Holder &a, const Holder &b) {
+    if (a.amount == b.amount)
+        return a.id < b.id;
+    return a.amount < b.amount;
+}
+
+int main() {
+    int N {0};
+    cin >> N;
+
+    vector<Holder> holders(N);
+    unordered_map<int, int> userMap;
+
+    for (int i {0}; i < N; ++i) {
+        cin >> holders[i].id >> holders[i].amount;
+        userMap[holders[i].id] = i;
+    }
+
+    int T {0};
+    cin >> T;
+
+    for (int i {0}; i < T; ++i) {
+        int sender {0}, receiver {0}, amount {0};
+        cin >> sender >> receiver >> amount;
+
+        int s {userMap[sender]}, r {userMap[receiver]};
+
+        if (holders[s].amount >= amount) {
+            holders[s].amount -= amount;
+            holders[r].amount += amount;
+            cout << "Success" << endl;
+        } else
+            cout << "Failure" << endl;
+    }
+
+    cout << endl;
+
+    sort(holders.begin(), holders.end(), compareByAmount);
+    for (const auto &h : holders)
+        cout << h.id << " " << h.amount << endl;
+    
+    return 0;
+}
